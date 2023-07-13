@@ -1,6 +1,9 @@
 const express = require('express');
+require('dotenv').config();
+
+
 const app = express();
-const port = 3008; // You can change the port number if needed
+const port = process.env.PORT; // You can change the port number if needed
 
 // Define routes
 app.get('/', (req, res) => {
