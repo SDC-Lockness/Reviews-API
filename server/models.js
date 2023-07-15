@@ -1,133 +1,86 @@
 const db = require('../DB/db.js');
 
 
-const getReviews = ({ product_id, sort, page, count }) => {
+const getReviews = (product_id = 40346, page = 1, count = 5, sort = 'date') => {
+  // Create the sort mapping
+  const sortMapping = {
+    relevant: 'helpfulness DESC',
+    newest: 'date DESC',
+    helpfulness: 'helpfulness DESC',
+  };
 
-  //CREATE GETREVIEWS QUERY
+  // Validate and get the sort column
+  const sortColumn = sortMapping[sort.toLowerCase()] || 'date';
+
+  // Calculate the offset based on the page and count
+  const offset = (page - 1) * count;
+
   const query = `
-      SELECT
-      R.id AS review_id,
-      R.rating,
-      R.summary,
-      R.recommend,
-      R.response,
-      R.body,
-      R.date,
-      R.reviewer_name,
-      R.helpfulness,
-      (
-        SELECT
-          array_to_json(coalesce(array_agg(photo), array[]::record[]))
-        FROM
-          (
-            SELECT
-              RP.id,
-              RP.url
-            FROM
-              reviews R2
-              INNER JOIN reviews_photos RP ON R2.id = RP.review_id
-            WHERE
-              RP.review_id = R.id
-          ) photo
-      ) AS photos
+    SELECT
+      r.id AS review_id,
+      r.rating,
+      r.summary,
+      r.recommend,
+      r.response,
+      r.body,
+      r.date,
+      r.reviewer_name,
+      r.helpfulness,
+      json_agg(json_build_object('url', rp.photo_url)) AS photos
     FROM
-      reviews R
+      reviews r
+      LEFT JOIN review_photos rp ON r.id = rp.review_id
     WHERE
-      R.product_id = $1
-      AND R.reported = false
-    ORDER BY $2
-    LIMIT $3
-    OFFSET $4;`
+      r.product_id = $1
+    GROUP BY
+      r.id
+    ORDER BY
+      ${sortColumn}
+    LIMIT
+      $2 OFFSET $3;
+  `;
 
-  if (sort === 'relevant'){
-    sort = 'R.helpfulness DESC';
-
-  } else if (sort === 'newest'){
-    sort = 'R.date DESC';
-
-  } else if (sort === 'helpfulness'){
-    sort = 'R.helpfulness DESC';
-  }
-
-  const offset = count * page - count;
-
-
-  return db.query(query, [product_id, sort, count, offset])
-
-    .then(results => { return results; })
-    .catch(error => { return error; })
-
+  return db.query(query, [product_id, count, offset]);
 };
 
 
-const fetchMetaData = ({product_id}) => {
+
+const fetchMetaData = (product_id = 40346) => {
 
   //CREATE FETCHMETADATA QUERY
   const query = `
-      SELECT
-      R1.product_id,
-      (
-        SELECT
-          json_object_agg(ALIAS2.rating, coalesce(ALIAS2.count, '0')) AS ratings
-        FROM
-          (
-            SELECT
-              empty.rating,
-              alias.count
-            FROM
-              (
-                temp_ratings empty FULL OUTER JOIN (
-                  SELECT R.rating, CAST(COUNT(*) AS text)
-                  FROM reviews R
-                  WHERE R.product_id = R1.product_id
-                  GROUP BY R.rating
-                ) alias USING (rating)
-              )
-          ) ALIAS2
+      WITH ratings AS (
+        SELECT rating, COUNT(*) as count
+        FROM reviews
+        WHERE product_id = $1
+        GROUP BY rating
       ),
-      json_build_object(
-        'false',
-        COUNT(R1.recommend) - SUM(R1.recommend::int),
-        'true',
-        SUM(R1.recommend::int)
-      ) AS recommended,
-      (
+      recommendations AS (
+        SELECT recommend, COUNT(*) as count
+        FROM reviews
+        WHERE product_id = $1
+        GROUP BY recommend
+      ),
+      chars AS (
         SELECT
-          json_object_agg(alias2.name, alias2.json_build_object) AS characteristics
-        FROM
-          (
-            SELECT
-              alias.name,
-              json_build_object('id', alias.id, 'value', alias.value)
-            FROM
-              (
-                SELECT
-                  C.name,
-                  C.id,
-                  AVG(CR.value)::NUMERIC(10, 2) AS value
-                FROM
-                  characteristics C
-                  INNER JOIN characteristic_reviews CR ON C.id = CR.characteristic_id
-                WHERE
-                  C.product_id = R1.product_id
-                GROUP BY
-                  C.id
-              ) alias
-          ) alias2
+          c.name,
+          c.id AS characteristic_id,
+          AVG(cr.value) as value
+        FROM characteristics c
+        JOIN characteristic_reviews cr ON c.id = cr.characteristic_id
+        WHERE c.product_id = $1
+        GROUP BY c.name, c.id
       )
-    FROM
-      reviews R1
-    WHERE
-      R1.product_id = $1
-    GROUP BY
-      R1.product_id;`
-
+      SELECT
+        r.product_id,
+        (SELECT jsonb_object_agg(rating, count) FROM ratings) AS ratings,
+        (SELECT jsonb_object_agg(recommend::text, count) FROM recommendations) AS recommended,
+        (SELECT jsonb_object_agg(name, jsonb_build_object('id', characteristic_id, 'value', value::text)) FROM chars) AS characteristics
+      FROM reviews r
+      WHERE r.product_id = $1;
+    `;
 
   return db.query(query, [product_id])
-
-    .then(results => { return results; })
-    .catch(error => { return error; })
-
 };
 
 
@@ -196,25 +149,23 @@ const addReview = ({ product_id, rating, summary, body, name, email, photos, cha
 };
 
 
-const addHelpfulReview = ({ review_id }) => {
+const addHelpfulReview = ( review_id ) => {
 
   const helpfulQuery = `UPDATE reviews SET helpfulness = helpfulness + 1 WHERE id = $1;`
 
   return db.query(helpfulQuery, [review_id])
-
-    .then(results => { return results })
-    .catch(error => { return error })
-
 };
 
 
-const reportReview = ({ review_id }) => {
+const reportReview = ( review_id ) => {
 
   const reportQuery = `UPDATE reviews SET reported = true WHERE id = $1;`
 
   return db.query(reportQuery, [review_id])
-
-    .then(results => { return results })
-    .catch(error => { return error })
-
 };
+
+module.exports.getReviews = getReviews;
+module.exports.fetchMetaData = fetchMetaData;
+module.exports.addReview = addReview;
+module.exports.addHelpfulReview = addHelpfulReview;
+module.exports.reportReview = reportReview;

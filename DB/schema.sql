@@ -54,4 +54,3 @@ DELIMITER ',' CSV HEADER;
 COPY characteristic_reviews (id, characteristic_id, review_id, value)
 FROM '/Users/mexicanpepe/Desktop/characteristic_reviews.csv'
 DELIMITER ',' CSV HEADER;
-
