@@ -45,7 +45,7 @@ const getReviews = (product_id = 40346, page = 1, count = 5, sort = 'date') => {
 
 
 
-const fetchMetaData = (product_id = 40346) => {
+const fetchMetaData = (product_id = 40347) => {
 
   //CREATE FETCHMETADATA QUERY
   const query = `

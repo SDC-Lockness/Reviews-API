@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS characteristics, characteristic_reviews, reviews, review_photos;
 
 CREATE TABLE reviews(
@@ -16,11 +15,17 @@ CREATE TABLE reviews(
   helpfulness INT DEFAULT 0
 );
 
+-- IDX for efficiency
+CREATE INDEX idx_reviews_product_id ON reviews (product_id);
+
 CREATE TABLE review_photos(
   id BIGSERIAL,
   review_id INT NOT NULL REFERENCES reviews(id),
   photo_url VARCHAR(150) NOT NULL
 );
+
+-- IDX for efficiency
+CREATE INDEX idx_review_photos_review_id ON review_photos (review_id);
 
 CREATE TABLE characteristics(
   id BIGSERIAL PRIMARY KEY,
@@ -28,12 +33,18 @@ CREATE TABLE characteristics(
   name VARCHAR(50) NOT NULL
 );
 
+-- IDX for efficiency
+CREATE INDEX idx_characteristics_product_id ON characteristics (product_id);
+
 CREATE TABLE characteristic_reviews(
   id BIGSERIAL PRIMARY KEY,
   characteristic_id INT NOT NULL REFERENCES characteristics(id),
   review_id INT NOT NULL REFERENCES reviews(id),
   value INT NOT NULL
 );
+
+-- IDX for efficiency
+CREATE INDEX idx_characteristic_reviews_characteristic_id ON characteristic_reviews (characteristic_id);
 
 
 /*
