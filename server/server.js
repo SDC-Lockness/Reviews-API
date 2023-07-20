@@ -25,6 +25,11 @@ app.use(express.json());
 app.use(cors());
 
 
+// Loadio Io verification
+// app.get('/loaderio-711e50acdbc6a85f11f8fed4b7882c6f', (req, res) => {
+//   res.send('loaderio-711e50acdbc6a85f11f8fed4b7882c6f');
+// })
+
 // getReviews
 app.get('/reviews', (req, res) => {
   // console.time('getReviews')
