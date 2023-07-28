@@ -13,3 +13,9 @@ Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews AP
 * Implemented an ETL process to migrate over 7GB/20M+ entries into a redesigned postreSQL database optimizing query times to ~1ms.
 * Scaled horizontally to a microservice architecture with 3 AWS EC2 instances.
 * Utilized an NGINX load balancer to distribute traffic across servers and take advantage of caching capabilities.
+
+
+### Stress Testing
+***
+##### Randomized selections of dataset @ 1000RPS
+93% Decrease in Avg. response time with 163% increase in successful responses
