@@ -7,6 +7,7 @@
 ![NGINX](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 
 # Reviews-API
+***
 Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews API is the result of refactoring an e-commerce monolithic application to a more performant and scalable microservice architecture capable of handling webscale traffic.
 
 
@@ -18,6 +19,5 @@ Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews AP
 
 
 ## Stress Testing
-***
 ##### Randomized selections of dataset @ 1000RPS
 93% Decrease in Avg. response time with 163% increase in successful responses
