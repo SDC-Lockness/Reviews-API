@@ -10,14 +10,14 @@
 ***
 Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews API is the result of refactoring an e-commerce monolithic application to a more performant and scalable microservice architecture capable of handling webscale traffic.
 
-
+<br />
 ### Optimizations:
 * Implemented an ETL process to migrate over 7GB/20M+ entries into a redesigned postreSQL database optimizing query times to ~1ms.
 * Scaled horizontally to a microservice architecture with 3 AWS EC2 instances.
 * Utilized an NGINX load balancer to distribute traffic across servers and take advantage of caching capabilities.
 
 
-
+<br />
 ## Stress Testing
 ##### Randomized selections of dataset @ 1000RPS
 93% Decrease in Avg. response time with 163% increase in successful responses
@@ -30,7 +30,7 @@ Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews AP
 | 4  | Optimized database & NGINX  | 167ms | 119974 / 120000 |
 | 5  | Optimized caching  | 48ms | 119979 / 120000 |
 
-
+<br />
 ## Getting Started
 1. From terminal, clone repo
 ```
@@ -47,7 +47,7 @@ npm install
 npm run start
 ```
 
-
+<br />
 ## Routes
 | HTTP Request  | API Endpoint | Response | Status Code |
 | ------------- | ------------- | ------------ | ------------- |
