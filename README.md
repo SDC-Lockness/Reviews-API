@@ -1,4 +1,5 @@
 # Reviews-API
+Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews API is the result of refactoring an e-commerce monolithic application to a more performant and scalable microservice architecture capable of handling webscale traffic.
 
 ## Tech Stack
 
