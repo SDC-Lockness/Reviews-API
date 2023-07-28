@@ -52,7 +52,7 @@ npm run start
 | HTTP Request  | API Endpoint | Response | Status Code |
 | ------------- | ------------- | ------------ | ------------- |
 | GET  | /reviews  | A list of reviews per particular product | 200 |
-| GET  | (/metaData  | Metadata for a single product | 200 |
+| GET  | /metaData  | Metadata for a single product | 200 |
 | POST  | /reviews/:product_id  | Post review for a given product | 200 |
 | PUT  | /reviews/helpful/:review_id  | Mark review helpful | 200 |
 | PUT  | /reviews/report/:review_id  | Report review | 200 |
