@@ -9,7 +9,7 @@
 # Reviews-API
 Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews API is the result of refactoring an e-commerce monolithic application to a more performant and scalable microservice architecture capable of handling webscale traffic.
 
-## Optimizations:
+## Optimizations: *Implemented an ETL process to migrate over 7GB/20M+ entries into a redesigned postreSQL database optimizing query times to ~1ms.
 Markup: 
  *Implemented an ETL process to migrate over 7GB/20M+ entries into a redesigned postreSQL database optimizing query times to ~1ms.
  *Scaled horizontally to a microservice architecture with 3 AWS EC2 instances.
