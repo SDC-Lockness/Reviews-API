@@ -5,6 +5,11 @@
 ![Node JS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white)
 ![NGINX](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+#### Engineering Journal
+https://www.notion.so/452fbe863d2c4d8ea779225e4ac8037e?v=29d5794d92ac4a91a974d3effa4ac24f
+
+
+
 
 # Reviews-API
 ***
