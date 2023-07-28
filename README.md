@@ -29,3 +29,30 @@ Starting with a sluggish API capable of less than 100RPS, the Atelier Reviews AP
 | 3  | (2) EC2 w/ NGINX Load Balancer  | 1859ms | 97917 / 120000 |
 | 4  | Optimized database & NGINX  | 167ms | 119974 / 120000 |
 | 5  | Optimized caching  | 48ms | 119979 / 120000 |
+
+
+## Getting Started
+1. From terminal, clone repo
+```
+git clone https://github.com/SDC-Lockness/Reviews-API.git
+```
+2. Install dependencies
+```
+npm install
+```
+3. Configure .env file
+4. Follow sql schemas in the ELT scripts in schema.sql to set up database.
+5. Start server
+```
+npm run start
+```
+
+
+## Routes
+| HTTP Request  | API Endpoint | Response | Status Code |
+| ------------- | ------------- | ------------ | ------------- |
+| GET  | /reviews  | A list of reviews per particular product | 200 |
+| GET  | (/metaData  | Metadata for a single product | 200 |
+| POST  | /reviews/:product_id  | Post review for a given product | 200 |
+| PUT  | /reviews/helpful/:review_id  | Mark review helpful | 200 |
+| PUT  | /reviews/report/:review_id  | Report review | 200 |
